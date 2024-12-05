@@ -16,6 +16,8 @@ fn main() {
 
     (days::day_01::Solution {}).add_to_registry(&mut registry);
     (days::day_02::Solution {}).add_to_registry(&mut registry);
+    (days::day_03::Solution {}).add_to_registry(&mut registry);
+    (days::day_04::Solution {}).add_to_registry(&mut registry);
 
     let solution = registry.run(args.day);
     match solution {
