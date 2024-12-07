@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use anyhow::{bail, Error};
 
-use crate::Problem;
+use crate::days::Problem;
 
 #[derive(Clone, Copy, PartialEq)]
 enum State {
@@ -123,7 +123,6 @@ impl Traveler {
                         self.walk_forward();
                     }
                     State::Obstacle => {
-
                         self.turn_right();
                     }
                 }
@@ -163,7 +162,7 @@ impl Traveler {
         let next = clone.next_step();
         if let Ok(State::Open) = clone.look_ahead(&map) {
             map.grid[next.0 as usize][next.1 as usize] = State::Obstacle;
-        } 
+        }
         if let Err(_) = clone.plan_patrol(&mut map) {
             return true;
         }
@@ -197,11 +196,6 @@ impl Traveler {
         let next_step = self.next_step();
         map.get_state(next_step.0, next_step.1)
     }
-
-    // fn look_in_direction(&self, map: &Map, direction: Direction) -> Result<State, Error> {
-    //     let next_step = self.next_step_in_direction(direction);
-    //     map.get_state(next_step.0, next_step.1)
-    // }
 }
 
 impl Default for Traveler {
@@ -272,28 +266,14 @@ impl Solution {
 }
 
 impl Problem for Solution {
-    fn part_one(&self, test: bool) -> String {
-        let file_path = if test {
-            "data/day06/test.txt"
-        } else {
-            "data/day06/data.txt"
-        };
-        let input = self.read_file(file_path).unwrap();
+    fn part_one(&self) -> String {
+        let input = self.read_file("data/day06/data.txt").unwrap();
         self.solve_a(&input).to_string()
     }
 
-    fn part_two(&self, test: bool) -> String {
-        let file_path = if test {
-            "data/day06/test.txt"
-        } else {
-            "data/day06/data.txt"
-        };
-        let input = self.read_file(file_path).unwrap();
+    fn part_two(&self) -> String {
+        let input = self.read_file("data/day06/data.txt").unwrap();
         self.solve_b(&input).to_string()
-    }
-
-    fn add_to_registry(self, registry: &mut crate::Registry) {
-        registry.register(6, Box::new(self));
     }
 }
 

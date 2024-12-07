@@ -1,13 +1,12 @@
-// use std::collections::HashMap;
-
-use crate::Problem;
+use crate::days::Problem;
 
 pub struct Solution;
 
 impl Solution {
     fn is_safe(levels: &Vec<i8>) -> bool {
-        let differences:Vec<i8>= levels.windows(2).map(|pair| pair[0] - pair[1]).collect();
-        (differences.iter().all(|f| *f < 0) || differences.iter().all(|f| *f > 0)) && differences.iter().all(|f| f.abs() > 0 && f.abs() <= 3)
+        let differences: Vec<i8> = levels.windows(2).map(|pair| pair[0] - pair[1]).collect();
+        (differences.iter().all(|f| *f < 0) || differences.iter().all(|f| *f > 0))
+            && differences.iter().all(|f| f.abs() > 0 && f.abs() <= 3)
     }
 
     fn is_safe_b(levels: &Vec<i8>) -> bool {
@@ -29,7 +28,8 @@ impl Solution {
             .lines()
             .map(|line| {
                 Solution::is_safe(
-                    &line.split_ascii_whitespace()
+                    &line
+                        .split_ascii_whitespace()
                         .map(|num| num.parse::<i8>().unwrap())
                         .collect(),
                 )
@@ -43,7 +43,8 @@ impl Solution {
             .lines()
             .map(|line| {
                 Solution::is_safe_b(
-                    &line.split_ascii_whitespace()
+                    &line
+                        .split_ascii_whitespace()
                         .map(|num| num.parse::<i8>().unwrap())
                         .collect(),
                 )
@@ -54,27 +55,34 @@ impl Solution {
 }
 
 impl Problem for Solution {
-    fn part_one(&self, test: bool) -> String {
-        let file_path = if test {
-            "data/day02/test.txt"
-        } else {
-            "data/day02/data.txt"
-        };
-        let input = self.read_file(file_path).unwrap();
+    fn part_one(&self) -> String {
+        let input = self.read_file("data/day02/data.txt").unwrap();
         self.solve_a(&input).to_string()
     }
 
-    fn part_two(&self, test: bool) -> String {
-        let file_path = if test {
-            "data/day02/test.txt"
-        } else {
-            "data/day02/data.txt"
-        };
-        let input = self.read_file(file_path).unwrap();
+    fn part_two(&self) -> String {
+        let input = self.read_file("data/day02/data.txt").unwrap();
         self.solve_b(&input).to_string()
     }
+}
 
-    fn add_to_registry(self, registry: &mut crate::Registry) {
-        registry.register(2, Box::new(self));
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_a() {
+        let solution = Solution {};
+        let input = solution.read_file("data/day02/test.txt").unwrap();
+        let result = solution.solve_a(&input);
+        assert_eq!(result, 2);
+    }
+
+    #[test]
+    fn test_b() {
+        let solution = Solution {};
+        let input = solution.read_file("data/day02/test.txt").unwrap();
+        let result = solution.solve_b(&input);
+        assert_eq!(result, 4);
     }
 }

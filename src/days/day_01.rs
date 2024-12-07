@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::Problem;
+use crate::days::Problem;
 
 pub struct Solution;
 
@@ -29,30 +29,47 @@ impl Solution {
         input.lines().for_each(|l| {
             let (left, right) = l.split_once("   ").unwrap();
             col_1.push(left.parse::<u32>().unwrap());
-            col_2.entry(right.parse::<u32>().unwrap()).and_modify(|counter| *counter += 1).or_insert(1);
+            col_2
+                .entry(right.parse::<u32>().unwrap())
+                .and_modify(|counter| *counter += 1)
+                .or_insert(1);
         });
 
-        col_1.iter().fold(0, |acc, e| {
-            acc + (col_2.get(e).unwrap_or(&0) * e)
-        })
-
+        col_1
+            .iter()
+            .fold(0, |acc, e| acc + (col_2.get(e).unwrap_or(&0) * e))
     }
 }
 
 impl Problem for Solution {
-    fn part_one(&self, test:bool) -> String {
-        let file_path = if test {"data/day01/test.txt"} else {"data/day01/data.txt"};
-        let input = self.read_file(file_path).unwrap();
+    fn part_one(&self) -> String {
+        let input = self.read_file("data/day01/data.txt").unwrap();
         self.solve_a(&input).to_string()
     }
-    
-    fn part_two(&self, test:bool) -> String {
-        let file_path = if test {"data/day01/test.txt"} else {"data/day01/data.txt"};
-        let input = self.read_file(file_path).unwrap();
+
+    fn part_two(&self) -> String {
+        let input = self.read_file("data/day01/data.txt").unwrap();
         self.solve_b(&input).to_string()
     }
+}
 
-    fn add_to_registry(self, registry: &mut crate::Registry) {
-        registry.register(1, Box::new(self));
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_a() {
+        let solution = Solution {};
+        let input = solution.read_file("data/day01/test.txt").unwrap();
+        let result = solution.solve_a(&input);
+        assert_eq!(result, 11);
+    }
+
+    #[test]
+    fn test_b() {
+        let solution = Solution {};
+        let input = solution.read_file("data/day01/test.txt").unwrap();
+        let result = solution.solve_b(&input);
+        assert_eq!(result, 31);
     }
 }
