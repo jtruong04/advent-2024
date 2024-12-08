@@ -1,4 +1,5 @@
 mod days;
+mod utils;
 
 use anyhow::Result;
 use clap::Parser;
