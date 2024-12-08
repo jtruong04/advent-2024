@@ -3,11 +3,11 @@ use crate::days::Problem;
 pub struct Solution;
 
 impl Solution {
-    fn solve_a(&self, input: &str) -> u32 {
+    fn solve_a(&self, _input: &str) -> u32 {
         0
     }
 
-    fn solve_b(&self, input: &str) -> u32 {
+    fn solve_b(&self, _input: &str) -> u32 {
         0
     }
 }
@@ -33,7 +33,7 @@ mod tests {
         let solution = Solution {};
         let input = solution.read_file("data/day00/test.txt").unwrap();
         let result = solution.solve_a(&input);
-        assert_eq!(result, 143);
+        assert_eq!(result, 0);
     }
 
     #[test]
@@ -41,6 +41,6 @@ mod tests {
         let solution = Solution {};
         let input = solution.read_file("data/day00/test.txt").unwrap();
         let result = solution.solve_b(&input);
-        assert_eq!(result, 123);
+        assert_eq!(result, 0);
     }
 }

@@ -1,11 +1,14 @@
-pub mod day_01;
-pub mod day_02;
-pub mod day_03;
-pub mod day_04;
-pub mod day_05;
-pub mod day_06;
 use anyhow::{bail, Result};
 use std::{collections::HashMap, fs};
+
+mod day_01;
+mod day_02;
+mod day_03;
+mod day_04;
+mod day_05;
+mod day_06;
+mod day_07;
+mod day_08;
 
 pub fn load() -> Registry {
     let mut registry = Registry::new();
@@ -16,6 +19,8 @@ pub fn load() -> Registry {
     registry.register(4, Box::new(day_04::Solution {}));
     registry.register(5, Box::new(day_05::Solution {}));
     registry.register(6, Box::new(day_06::Solution {}));
+    registry.register(7, Box::new(day_07::Solution {}));
+    registry.register(8, Box::new(day_08::Solution {}));
 
     registry
 }
