@@ -3,11 +3,11 @@ use std::collections::{HashMap, HashSet};
 
 use crate::{
     days::Problem,
-    utils::{gcd, Point},
+    utils::{math::gcd, point::Point},
 };
 
 struct City {
-    antennas: HashMap<char, HashSet<Point>>,
+    antennas: HashMap<char, HashSet<Point<i32>>>,
     width: u32,
     height: u32,
 }
@@ -37,17 +37,17 @@ impl City {
         }
     }
 
-    fn contains(&self, point: &Point) -> bool {
+    fn contains(&self, point: &Point<i32>) -> bool {
         point.0 >= 0 && point.0 < self.height as i32 && point.1 >= 0 && point.1 < self.width as i32
     }
 
-    fn get_first_order_antinodes(&self) -> HashSet<Point> {
+    fn get_first_order_antinodes(&self) -> HashSet<Point<i32>> {
         let mut antinodes = HashSet::new();
 
         for antennas in self.antennas.values() {
             for pair in antennas.iter().combinations(2) {
                 let (a, b) = (*pair[0], *pair[1]);
-                let delta = a-b;
+                let delta = a - b;
                 let node_1 = a - delta;
                 let node_2 = b + delta;
                 if self.contains(&node_1) {
@@ -62,13 +62,13 @@ impl City {
         antinodes
     }
 
-    fn get_antinodes(&self) -> HashSet<Point> {
-        let mut antinodes = HashSet::<Point>::new();
+    fn get_antinodes(&self) -> HashSet<Point<i32>> {
+        let mut antinodes = HashSet::<Point<i32>>::new();
 
         for antennas in self.antennas.values() {
             for pair in antennas.iter().combinations(2) {
                 let (a, b) = (*pair[0], *pair[1]);
-                let delta = a-b;
+                let delta = a - b;
                 let delta = delta / gcd(delta.0, delta.1);
 
                 // Keep subtracting from a until we go off map
