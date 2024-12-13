@@ -48,3 +48,14 @@ where
         Self(self.0 * rhs, self.1 * rhs)
     }
 }
+
+#[allow(non_snake_case, non_upper_case_globals)]
+pub mod Direction {
+    use crate::utils::point::Point;
+
+    pub const UP:Point<i64> = Point(-1,0);
+    pub const DOWN:Point<i64> = Point(1,0);
+    pub const LEFT:Point<i64> = Point(0,-1);
+    pub const RIGHT:Point<i64> = Point(0,1);
+
+}
