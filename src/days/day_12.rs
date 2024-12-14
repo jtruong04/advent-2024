@@ -3,13 +3,12 @@ use std::collections::HashSet;
 use crate::{
     days::Problem,
     utils::{
-        grid::parse_into_grid,
+        world::World,
         point::{Direction, Point},
     },
 };
 
 type Region = HashSet<Point<i64>>;
-type Map = Vec<Vec<char>>;
 
 fn compute_perimeter(region: &Region) -> u32 {
     let mut perimeter: u32 = 0;
@@ -35,22 +34,34 @@ fn compute_sides(region: &Region) -> u32 {
     for point in region {
         if !region.contains(&(*point + Direction::UP)) {
             // Up is not in region. Need to check if left is in region and up-left is not in region
-            if !region.contains(&(*point + Direction::LEFT)) || ( region.contains(&(*point + Direction::LEFT)) && region.contains(&(*point + Direction::UP + Direction::LEFT)) ) {
+            if !region.contains(&(*point + Direction::LEFT))
+                || (region.contains(&(*point + Direction::LEFT))
+                    && region.contains(&(*point + Direction::UP + Direction::LEFT)))
+            {
                 sides += 1;
             }
         }
         if !region.contains(&(*point + Direction::DOWN)) {
-            if !region.contains(&(*point + Direction::RIGHT)) || (  region.contains(&(*point + Direction::RIGHT)) && region.contains(&(*point + Direction::DOWN + Direction::RIGHT)) ){
+            if !region.contains(&(*point + Direction::RIGHT))
+                || (region.contains(&(*point + Direction::RIGHT))
+                    && region.contains(&(*point + Direction::DOWN + Direction::RIGHT)))
+            {
                 sides += 1;
             }
         }
         if !region.contains(&(*point + Direction::LEFT)) {
-            if !region.contains(&(*point + Direction::DOWN)) || ( region.contains(&(*point + Direction::DOWN)) && region.contains(&(*point + Direction::LEFT + Direction::DOWN))) {
+            if !region.contains(&(*point + Direction::DOWN))
+                || (region.contains(&(*point + Direction::DOWN))
+                    && region.contains(&(*point + Direction::LEFT + Direction::DOWN)))
+            {
                 sides += 1;
             }
         }
         if !region.contains(&(*point + Direction::RIGHT)) {
-            if !region.contains(&(*point + Direction::UP)) || ( region.contains(&(*point + Direction::UP)) && region.contains(&(*point + Direction::RIGHT + Direction::UP))) {
+            if !region.contains(&(*point + Direction::UP))
+                || (region.contains(&(*point + Direction::UP))
+                    && region.contains(&(*point + Direction::RIGHT + Direction::UP)))
+            {
                 sides += 1;
             }
         }
@@ -58,43 +69,43 @@ fn compute_sides(region: &Region) -> u32 {
     sides
 }
 
-fn size(map: &Map) -> (usize, usize) {
-    (map.len(), map[0].len())
-}
+// fn size(map: &Map) -> (usize, usize) {
+//     (map.len(), map[0].len())
+// }
 
-fn find_grid(grid: &Map, init: Point<i64>) -> Region {
-    let region_code = grid[init.0 as usize][init.1 as usize];
+fn find_grid(world: &World<char>, init: Point<i64>) -> Region {
+    let region_code = world.map[init.0 as usize][init.1 as usize];
     let mut region: Region = HashSet::new();
     let mut queue: Vec<Point<i64>> = vec![init];
-    let (num_rows, num_cols) = size(&grid);
+    let (num_rows, num_cols) = (world.height, world.width);
 
     while let Some(p) = queue.pop() {
         region.insert(p);
         // check each directions
         // North
         if p.0 > 0
-            && grid[(p.0 - 1) as usize][p.1 as usize] == region_code
+            && world.map[(p.0 - 1) as usize][p.1 as usize] == region_code
             && !region.contains(&Point(p.0 - 1, p.1))
         {
             queue.push(Point(p.0 - 1, p.1));
         }
         // East
         if p.1 < num_cols as i64 - 1
-            && grid[p.0 as usize][(p.1 + 1) as usize] == region_code
+            && world.map[p.0 as usize][(p.1 + 1) as usize] == region_code
             && !region.contains(&Point(p.0, p.1 + 1))
         {
             queue.push(Point(p.0, p.1 + 1));
         }
         // South
         if p.0 < num_rows as i64 - 1
-            && grid[(p.0 + 1) as usize][p.1 as usize] == region_code
+            && world.map[(p.0 + 1) as usize][p.1 as usize] == region_code
             && !region.contains(&Point(p.0 + 1, p.1))
         {
             queue.push(Point(p.0 + 1, p.1));
         }
         // West
         if p.1 > 0
-            && grid[p.0 as usize][(p.1 - 1) as usize] == region_code
+            && world.map[p.0 as usize][(p.1 - 1) as usize] == region_code
             && !region.contains(&Point(p.0, p.1 - 1))
         {
             queue.push(Point(p.0, p.1 - 1));
@@ -107,13 +118,13 @@ fn parse_into_regions(input: &str) -> Vec<Region> {
     let mut regions = Vec::new();
     let mut visited: HashSet<Point<i64>> = HashSet::new();
 
-    let grid = parse_into_grid::<char>(input).unwrap();
+    let world = World::<char>::new_from_string(input).unwrap();
 
-    for (i, row) in grid.iter().enumerate() {
+    for (i, row) in world.map.iter().enumerate() {
         for (j, _cell) in row.iter().enumerate() {
             let p = Point(i as i64, j as i64);
             if !visited.contains(&p) {
-                let region = find_grid(&grid, p);
+                let region = find_grid(&world, p);
                 for point in region.clone() {
                     visited.insert(point);
                 }
@@ -134,9 +145,9 @@ impl Solution {
             .iter()
             .map(|r| r.len() as u32 * compute_perimeter(r))
             .sum()
-        }
-        
-        fn solve_b(&self, input: &str) -> u32 {
+    }
+
+    fn solve_b(&self, input: &str) -> u32 {
         let regions = parse_into_regions(input);
         regions
             .iter()

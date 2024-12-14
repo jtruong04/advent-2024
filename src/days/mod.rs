@@ -14,6 +14,7 @@ mod day_10;
 mod day_11;
 mod day_12;
 mod day_13;
+mod day_14;
 
 pub fn load() -> Registry {
     let mut registry = Registry::new();
@@ -31,6 +32,7 @@ pub fn load() -> Registry {
     registry.register(11, Box::new(day_11::Solution {}));
     registry.register(12, Box::new(day_12::Solution {}));
     registry.register(13, Box::new(day_13::Solution {}));
+    registry.register(14, Box::new(day_14::Solution {}));
 
     registry
 }

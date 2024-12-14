@@ -47,7 +47,7 @@ impl City {
         for antennas in self.antennas.values() {
             for pair in antennas.iter().combinations(2) {
                 let (a, b) = (*pair[0], *pair[1]);
-                let delta = a - b;
+                let delta = b - a;
                 let node_1 = a - delta;
                 let node_2 = b + delta;
                 if self.contains(&node_1) {
