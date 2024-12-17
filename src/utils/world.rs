@@ -34,9 +34,7 @@ where
 
 pub trait Tick<T> {
     fn tick(&mut self, dt: T);
-} 
-
-
+}
 
 #[cfg(test)]
 mod tests {

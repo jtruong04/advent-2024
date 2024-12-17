@@ -3,13 +3,13 @@ use std::ops::{Add, Div, Mul, Rem, Sub};
 #[derive(PartialEq, Eq, Hash, Clone, Copy)]
 pub struct Point<T>(pub T, pub T);
 
-impl<T> Add for Point<T>
+impl<T,U> Add<Point<U>> for Point<T>
 where
-    T: Add<Output = T>,
+    T: Add<U, Output = T>,
 {
     type Output = Self;
 
-    fn add(self, other: Self) -> Self {
+    fn add(self, other: Point<U>) -> Self {
         Self(self.0 + other.0, self.1 + other.1)
     }
 }

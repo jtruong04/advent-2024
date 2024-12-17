@@ -9,5 +9,6 @@ clap = { version = "4.5.21", features = ["derive"] }
 clearscreen = "3.0.0"
 image = "0.25.5"
 itertools = "0.13.0"
+priority-queue = "2.1.1"
 regex = "1.11.1"
 rstest = "0.23.0"
