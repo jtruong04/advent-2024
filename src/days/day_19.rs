@@ -5,17 +5,23 @@ use crate::days::Problem;
 pub struct Solution;
 
 
-fn can_be_made(towel: &str, patterns: &Vec<&str>) -> bool {
+fn can_be_made<'a>(towel: &'a str, patterns: &Vec<&str>, cache: &'a RefCell< HashMap<&'a str, bool>>) -> bool {
+    if let Some(c) = cache.borrow().get(towel) {
+        return *c;
+    }
     for pattern in patterns {
         if *pattern == towel {
+            cache.borrow_mut().insert(towel, true);
             return true;
         }
         if let Some(substring) = towel.strip_prefix(pattern) {
-            if can_be_made(substring, patterns) {
+            if can_be_made(substring, patterns, cache) {
+                cache.borrow_mut().insert(towel, true);
                 return true;
             }
         }
     }
+    cache.borrow_mut().insert(towel, false);
     false
 }
 
@@ -45,7 +51,7 @@ fn parse(input: &str) -> (Vec<&str>, Vec<&str>) {
 impl Solution {
     fn solve_a(&self, input: &str) -> u64 {
         let (patterns, towels) = parse(input);
-        towels.iter().map(|t| can_be_made(t, &patterns)).filter(|r| *r).count() as u64
+        towels.iter().map(|t| can_be_made(t, &patterns, &RefCell::new(HashMap::new()))).filter(|r| *r).count() as u64
     }
 
     fn solve_b(&self, input: &str) -> u64 {
@@ -73,7 +79,7 @@ mod tests {
 
     #[test]
     fn test_can_be_made() {
-        assert!(can_be_made("brwrr", &vec!["r", "wr", "b", "g", "bwu", "rb", "gb", "br"]));
+        assert!(can_be_made("brwrr", &vec!["r", "wr", "b", "g", "bwu", "rb", "gb", "br"], &RefCell::new(HashMap::new())));
     }
     #[test]
     fn test_count_ways_to_make_0() {
@@ -98,7 +104,7 @@ mod tests {
 
     #[test]
     fn test_cant_be_made() {
-        assert!(!can_be_made("bbrgwb", &vec!["r", "wr", "b", "g", "bwu", "rb", "gb", "br"]));
+        assert!(!can_be_made("bbrgwb", &vec!["r", "wr", "b", "g", "bwu", "rb", "gb", "br"], &RefCell::new(HashMap::new())));
     }
 
 
